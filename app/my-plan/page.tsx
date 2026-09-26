@@ -7,9 +7,18 @@ import { useWorkout } from "../context/WorkoutContext";
 export default function MyPlan() {
   const { plannedWorkouts, savedWorkouts, removeFromPlan, markAsDone } = useWorkout();
   const [activeTab, setActiveTab] = useState<'plan' | 'saved'>('plan');
+  const [sortBy, setSortBy] = useState<'duration' | 'calories' | 'rating'>('duration');
   const [toastMessage, setToastMessage] = useState("");
 
   const currentList = activeTab === 'plan' ? plannedWorkouts : savedWorkouts;
+  
+  // Sorting Logic
+  const sortedList = [...currentList].sort((a, b) => {
+    if (sortBy === 'duration') return b.duration - a.duration;
+    if (sortBy === 'calories') return b.caloriesBurned - a.caloriesBurned;
+    if (sortBy === 'rating') return b.rating - a.rating;
+    return 0;
+  });
   
   const totalExercises = currentList.length;
   const totalMinutes = currentList.reduce((sum, workout) => sum + workout.duration, 0);
@@ -54,8 +63,8 @@ export default function MyPlan() {
         </div>
       </div>
 
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex bg-surface rounded-lg p-1 border border-[#2a2a2a]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+        <div className="flex bg-surface rounded-lg p-1 border border-[#2a2a2a] w-max">
           <button
             onClick={() => setActiveTab('plan')}
             className={`px-6 py-2 rounded-md text-sm font-bold transition-colors ${
@@ -73,9 +82,26 @@ export default function MyPlan() {
             Saved
           </button>
         </div>
+
+        {/* Sorting Dropdown */}
+        <div className="flex items-center gap-3">
+          <span className="text-textSecondary text-sm font-medium">Sort By</span>
+          <div className="relative">
+            <select 
+              value={sortBy} 
+              onChange={(e) => setSortBy(e.target.value as any)}
+              className="bg-surface border border-[#2a2a2a] text-white text-sm rounded-md pl-4 pr-10 py-2 appearance-none cursor-pointer focus:outline-none focus:border-accent"
+            >
+              <option value="duration">Duration</option>
+              <option value="calories">Calories</option>
+              <option value="rating">Rating</option>
+            </select>
+            <svg className="w-4 h-4 absolute right-3 top-2.5 pointer-events-none text-textSecondary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+          </div>
+        </div>
       </div>
 
-      {currentList.length === 0 ? (
+      {sortedList.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 border-2 border-dashed border-[#2a2a2a] rounded-xl bg-surface/50">
           <h2 className="text-2xl font-bold font-oswald uppercase text-white mb-2">Nothing here yet</h2>
           <p className="text-textSecondary mb-6">Browse the library and add a lift to get today moving.</p>
@@ -85,7 +111,7 @@ export default function MyPlan() {
         </div>
       ) : (
         <div className="flex flex-col gap-4">
-          {currentList.map((workout) => (
+          {sortedList.map((workout) => (
             <div key={workout.id} className="flex flex-col md:flex-row bg-surface border border-[#2a2a2a] rounded-xl overflow-hidden relative">
               <button 
                 onClick={() => handleRemove(workout.id)}
