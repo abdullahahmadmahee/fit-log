@@ -11,7 +11,7 @@ export default function Navbar() {
   return (
     <nav className="flex items-center justify-between py-6 px-4 md:px-8 border-b border-surface">
       <Link href="/" className="text-2xl font-bold font-oswald tracking-wider flex items-center gap-2">
-        <span>💪</span> FITLOG
+        <span><img src="/logo.png" alt="logo.png"/></span> FITLOG
       </Link>
       
       <div className="hidden md:flex items-center gap-8 text-sm font-medium">
