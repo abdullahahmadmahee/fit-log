@@ -1,5 +1,7 @@
 # FitLog - Workout Library
 
+Live Demo:[Insert your Vercel Link Here]
+
 FitLog is a dark, no-nonsense gym companion app that allows users to browse a dynamic workout library, view detailed exercise instructions, and curate their own daily training plans. Built for Assignment 6 by Abdullah Ahmad Mahee.
 
 ## Technologies Used
